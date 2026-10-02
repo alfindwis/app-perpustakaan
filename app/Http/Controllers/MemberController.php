@@ -2,28 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Member;
+use App\Http\Requests\StoreMemberRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MemberController extends Controller
 {
-    private array $members = [
-        ['id' => 1, 'nama' => 'Siti Aminah', 'nim' => '2310501001', 'email' => 'siti.aminah@pens.ac.id', 'nomor_telepon' => '081234567890', 'status' => 'aktif'],
-        ['id' => 2, 'nama' => 'Budi Santoso', 'nim' => '2310501002', 'email' => 'budi.santoso@pens.ac.id', 'nomor_telepon' => '081298765432', 'status' => 'aktif'],
-        ['id' => 3, 'nama' => 'Dewi Lestari', 'nim' => '2310501003', 'email' => 'dewi.lestari@pens.ac.id', 'nomor_telepon' => '081211122233', 'status' => 'nonaktif'],
-    ];
-
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar anggota dengan pagination.
      */
     public function index()
     {
-        $members = $this->members;
+        $members = Member::paginate(10);
 
         return view('members.index', compact('members'));
-    }
+    }    
 
     /**
-     * Show the form for creating a new resource.
+     * Tampilkan form untuk menambah anggota baru.
      */
     public function create()
     {
@@ -31,43 +28,69 @@ class MemberController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan data anggota baru ke database.
      */
-    public function store(Request $request)
+    public function store(StoreMemberRequest $request)
     {
+        $validated = $request->validated();
+
+        Member::create($validated);
+
         return redirect()->route('members.index')
-            ->with('success', 'Data anggota berhasil ditambahkan (Dummy)!');    
+            ->with('success', "Anggota \"{$validated['nama']}\" berhasil ditambahkan.");
     }
 
     /**
-     * Display the specified resource.
+     * Tampilkan detail data anggota.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        return "MemberController@show, id: {$id}";
+
+        $member = Member::with(['loans.loanItems.book', 'loans.user'])->findOrFail($id);
+        return view('members.show', compact('member'));
+
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Tampilkan form untuk mengedit data anggota.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        return "MemberController@edit, id: {$id}";
+        $member = Member::findOrFail($id);
+        return view('members.edit', compact('member'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Perbarui data anggota di database.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        return "MemberController@update, id: {$id}";
+        $member = Member::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama'          => 'required|string|max:255',
+            'nim'           => ['required', 'string', 'max:50', Rule::unique('members')->ignore($member->id)],
+            'email'         => ['required', 'email', 'max:255', Rule::unique('members')->ignore($member->id)],
+            'nomor_telepon' => 'required|string|max:20',
+            'alamat'        => 'required|string',
+            'status'        => 'required|in:aktif,nonaktif',
+        ]);
+
+        $member->update($validated);
+
+        return redirect()->route('members.index')
+            ->with('success', 'Data anggota berhasil diperbarui.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus data anggota dari database.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        return "MemberController@destroy, id: {$id}";
+        $member = Member::findOrFail($id);
+        $member->delete();
+
+        return redirect()->route('members.index')
+            ->with('success', 'Anggota berhasil dihapus.');
     }
 }
