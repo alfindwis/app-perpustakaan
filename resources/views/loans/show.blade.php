@@ -9,6 +9,34 @@
         table { border-collapse: collapse; width: 100%; margin-top: 16px; }
         th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
         .info th { width: 160px; background: #f3f4f6; }
+
+        /* Badge Status CSS */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +66,17 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td>{{ ucfirst($loan['status']) }}</td>
+            <td>
+                @if ($loan['status'] === 'dikembalikan')
+                    <span class="badge badge-success">Dikembalikan</span>
+                @elseif ($loan['status'] === 'dipinjam')
+                    <span class="badge badge-warning">Dipinjam</span>
+                @elseif ($loan['status'] === 'terlambat')
+                    <span class="badge badge-danger">Terlambat</span>
+                @else
+                    <span class="badge">{{ ucfirst($loan['status']) }}</span>
+                @endif
+            </td>
         </tr>
     </table>
 

@@ -12,6 +12,9 @@
         nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
         nav ul li a { color: #cbd5e1; text-decoration: none; padding: 6px 4px; }
         nav ul li a.active { color: #fff; font-weight: bold; border-bottom: 2px solid #fff; }
+        nav .navbar-user { display: flex; align-items: center; gap: 12px; color: #cbd5e1; font-size: 14px; }
+        nav .btn-logout { background: none; border: 1px solid #cbd5e1; color: #cbd5e1; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        nav .btn-logout:hover { background: #1e40af; color: #fff; }
         main { max-width: 900px; margin: 0 auto; padding: 30px 40px; }
         table { border-collapse: collapse; width: 100%; margin-top: 16px; }
         th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
@@ -19,6 +22,35 @@
         .btn { display: inline-block; padding: 6px 14px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
         form.inline { display: inline; }
         footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; margin-top: 40px; }
+
+                /* Badge Base */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Badge Status Variants */
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>

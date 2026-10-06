@@ -9,8 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Loan extends Model
 {
     protected $fillable = [
-        'member_id', 'user_id', 'tanggal_pinjam',
-        'tanggal_kembali', 'tanggal_dikembalikan', 'status',
+    'user_id',
+    'member_id',
+    'tanggal_pinjam',
+    'tanggal_kembali',
+    'status',
+    'tanggal_dikembalikan',    
     ];
 
     public function member(): BelongsTo
